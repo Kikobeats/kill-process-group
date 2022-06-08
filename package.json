@@ -28,7 +28,7 @@
     "pidtree": "latest",
     "p-every": "latest",
     "execa": "5",
-    "ps-list": "7",
+    "ps-list": "8",
     "@commitlint/cli": "latest",
     "@commitlint/config-conventional": "latest",
     "ava": "latest",
