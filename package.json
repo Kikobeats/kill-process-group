@@ -2,11 +2,11 @@
   "name": "kill-process-group",
   "description": "It kills a process group. No dependencies. Windows support.",
   "homepage": "https://nicedoc.io/Kikobeats/kill-process-group",
-  "main": "src/index.js",
   "version": "0.0.0",
+  "main": "src/index.js",
   "author": {
-    "name": "Kiko Beats",
     "email": "josefrancisco.verdu@gmail.com",
+    "name": "Kiko Beats",
     "url": "https://kikobeats.com"
   },
   "repository": {
@@ -23,23 +23,22 @@
     "process",
     "subprocess"
   ],
-  "dependencies": {},
   "devDependencies": {
-    "pidtree": "latest",
-    "p-every": "latest",
-    "execa": "5",
-    "ps-list": "7",
     "@commitlint/cli": "latest",
     "@commitlint/config-conventional": "latest",
     "ava": "latest",
     "c8": "latest",
     "ci-publish": "latest",
     "conventional-github-releaser": "latest",
+    "execa": "5",
     "finepack": "latest",
     "git-authors-cli": "latest",
     "nano-staged": "latest",
     "npm-check-updates": "latest",
+    "p-every": "latest",
+    "pidtree": "latest",
     "prettier-standard": "latest",
+    "ps-list": "7",
     "simple-git-hooks": "latest",
     "standard": "latest",
     "standard-markdown": "latest",
@@ -48,6 +47,9 @@
   "engines": {
     "node": ">= 14"
   },
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "clean": "rm -rf node_modules",
     "contributors": "(git-authors-cli && finepack && git add package.json && git commit -m 'build: contributors' --no-verify) || true",
