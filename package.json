@@ -2,7 +2,7 @@
   "name": "kill-process-group",
   "description": "It kills a process group. No dependencies. Windows support.",
   "homepage": "https://nicedoc.io/Kikobeats/kill-process-group",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "src/index.js",
   "author": {
     "email": "josefrancisco.verdu@gmail.com",
