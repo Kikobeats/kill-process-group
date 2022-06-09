@@ -16,17 +16,17 @@ const win = async proc => {
   }
 }
 
-const unix = subprocess => {
+const unix = (subprocess, { signal = 'SIGKILL' } = {}) => {
   // on linux the process group can be killed with the group id prefixed with
   // a minus sign. The process group id is the group leader's pid.
   const processGroupId = -subprocess.pid
   try {
-    process.kill(processGroupId, 'SIGKILL')
+    process.kill(processGroupId, signal)
   } catch (error) {
     // Killing the process group can fail due e.g. to missing permissions.
     // Let's kill the process via Node API. This delays killing of all child
     // processes of `this.proc` until the main Node.js process dies.
-    subprocess.kill('SIGKILL')
+    subprocess.kill(signal)
   }
 }
 
