@@ -30,7 +30,7 @@
     "c8": "latest",
     "ci-publish": "latest",
     "conventional-github-releaser": "latest",
-    "execa": "5",
+    "execa": "8",
     "finepack": "latest",
     "git-authors-cli": "latest",
     "nano-staged": "latest",
