@@ -5,14 +5,14 @@ const exec = promisify(require('child_process').exec)
 
 const isWin = process.platform === 'win32'
 
-const win = async subprocess => {
+const win = async (subprocess, { signal = 'SIGKILL' } = {}) => {
   try {
     await exec(`taskkill /pid ${subprocess.pid} /T /F`)
   } catch (_) {
     // taskkill can fail to kill the process e.g. due to missing permissions.
     // Let's kill the process via Node API. This delays killing of all child
     // processes of `this.proc` until the main Node.js process dies.
-    subprocess.kill()
+    subprocess.kill(signal)
   }
 }
 
