@@ -30,7 +30,7 @@
     "ava": "latest",
     "c8": "latest",
     "ci-publish": "latest",
-    "execa": "~5.1.1",
+    "execa": "~9.0.0",
     "finepack": "latest",
     "git-authors-cli": "latest",
     "github-generate-release": "latest",
