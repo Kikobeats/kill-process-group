@@ -30,7 +30,6 @@
     "ava": "latest",
     "c8": "latest",
     "ci-publish": "latest",
-    "execa": "~5.1.1",
     "finepack": "latest",
     "git-authors-cli": "latest",
     "github-generate-release": "latest",
@@ -41,7 +40,8 @@
     "ps-list": "7",
     "simple-git-hooks": "latest",
     "standard": "latest",
-    "standard-version": "latest"
+    "standard-version": "latest",
+    "tinyspawn": "latest"
   },
   "engines": {
     "node": ">= 14"

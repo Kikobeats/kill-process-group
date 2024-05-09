@@ -16,9 +16,9 @@ $ npm install kill-process-group --save
 
 ```js
 const killProcessGroup = require('kill-process-group')
-const execa = require('execa')
+const $ = require('tinyspawn')
 
-const proc = execa.node(scripts.parent, {
+const proc = $(`node ${scripts.parent}`, {
   detached: process.platform !== 'win32',
   stdio: 'inherit'
 })

@@ -1,10 +1,11 @@
 'use strict'
 
-const execa = require('execa')
+const $ = require('tinyspawn')
+
 const path = require('path')
 
 for (let i = 0; i < 10; i++) {
-  execa.node(path.resolve(__dirname, 'child.js'), { stdio: 'inherit' })
+  $(`node ${path.resolve(__dirname, 'child.js')}`, { stdio: 'inherit' })
 }
 
 setInterval(function () {
