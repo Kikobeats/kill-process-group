@@ -38,7 +38,7 @@
     "npm-check-updates": "latest",
     "p-every": "latest",
     "pidtree": "latest",
-    "ps-list": "7",
+    "ps-list": "9",
     "simple-git-hooks": "latest",
     "standard": "latest",
     "standard-version": "latest",
