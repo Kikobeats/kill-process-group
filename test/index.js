@@ -1,12 +1,13 @@
 'use strict'
 
 const { setTimeout } = require('timers/promises')
+const pWaitFor = require('p-wait-for')
 const pidtree = require('pidtree')
 const pEvery = require('p-every')
 const psList = require('ps-list')
+const $ = require('tinyspawn')
 const path = require('path')
 const test = require('ava')
-const $ = require('tinyspawn')
 
 const scripts = {
   parent: path.join(__dirname, 'helpers', 'parent.js'),
@@ -20,20 +21,22 @@ const getProcess = async _pid =>
 
 const processExist = async pid => !!(await getProcess(pid))
 
-const waitFor = async (predicate, { timeout = 5000, interval = 100 } = {}) => {
-  const startedAt = Date.now()
-  while (Date.now() - startedAt < timeout) {
-    if (await predicate()) return true
-    await setTimeout(interval)
+const waitForPredicate = async predicate => {
+  try {
+    await pWaitFor(predicate, { timeout: 5000, interval: 100 })
+    return true
+  } catch (_) {
+    return false
   }
-  return predicate()
 }
 
 const waitForProcessExit = pid =>
-  waitFor(async () => !(await processExist(pid)))
+  waitForPredicate(async () => !(await processExist(pid)))
 
 const waitForProcessesExit = pids =>
-  waitFor(async () => pEvery(pids, async pid => !(await processExist(pid))))
+  waitForPredicate(async () =>
+    pEvery(pids, async pid => !(await processExist(pid)))
+  )
 
 const registerKillOnTeardown = (t, subprocess) => {
   t.teardown(async () => {

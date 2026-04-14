@@ -35,6 +35,7 @@
     "github-generate-release": "latest",
     "nano-staged": "latest",
     "p-every": "latest",
+    "p-wait-for": "3",
     "pidtree": "latest",
     "ps-list": "7",
     "simple-git-hooks": "latest",
