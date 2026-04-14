@@ -35,8 +35,25 @@ const waitForProcessExit = pid =>
 const waitForProcessesExit = pids =>
   waitFor(async () => pEvery(pids, async pid => !(await processExist(pid))))
 
+const registerKillOnTeardown = (t, subprocess) => {
+  t.teardown(async () => {
+    try {
+      await killProcessGroup(subprocess)
+    } catch (_) {}
+  })
+}
+
+const spawnSubprocess = (t, script, options) => {
+  const subprocess = $(`node ${script}`, options)
+  subprocess.catch(() => {})
+  registerKillOnTeardown(t, subprocess)
+  return subprocess
+}
+
 const getProcessTreePids = async rootPid => {
-  if (process.platform !== 'win32') return [rootPid, ...(await pidtree(rootPid))]
+  if (process.platform !== 'win32') {
+    return [rootPid, ...(await pidtree(rootPid))]
+  }
 
   const processList = await psList()
   const pids = new Set([rootPid])
@@ -56,13 +73,7 @@ const getProcessTreePids = async rootPid => {
 }
 
 test('kill a process with no childs', async t => {
-  const subprocess = $(`node ${scripts.child}`, { stdio: 'inherit' })
-  subprocess.catch(() => {})
-  t.teardown(async () => {
-    try {
-      await killProcessGroup(subprocess)
-    } catch (_) {}
-  })
+  const subprocess = spawnSubprocess(t, scripts.child, { stdio: 'inherit' })
   await setTimeout(100)
   t.truthy(await processExist(subprocess.pid))
   await killProcessGroup(subprocess)
@@ -71,15 +82,9 @@ test('kill a process with no childs', async t => {
 })
 
 test('kill a detached process with no childs', async t => {
-  const subprocess = $(`node ${scripts.child}`, {
+  const subprocess = spawnSubprocess(t, scripts.child, {
     detached: process.platform !== 'win32',
     stdio: 'inherit'
-  })
-  subprocess.catch(() => {})
-  t.teardown(async () => {
-    try {
-      await killProcessGroup(subprocess)
-    } catch (_) {}
   })
   await setTimeout(100)
   t.truthy(await processExist(subprocess.pid))
@@ -89,15 +94,9 @@ test('kill a detached process with no childs', async t => {
 })
 
 test('kill a detached process with childs', async t => {
-  const subprocess = $(`node ${scripts.parent}`, {
+  const subprocess = spawnSubprocess(t, scripts.parent, {
     detached: process.platform !== 'win32',
     stdio: 'inherit'
-  })
-  subprocess.catch(() => {})
-  t.teardown(async () => {
-    try {
-      await killProcessGroup(subprocess)
-    } catch (_) {}
   })
   await setTimeout(100)
   const pids = await getProcessTreePids(subprocess.pid)
