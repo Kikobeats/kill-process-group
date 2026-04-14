@@ -35,9 +35,34 @@ const waitForProcessExit = pid =>
 const waitForProcessesExit = pids =>
   waitFor(async () => pEvery(pids, async pid => !(await processExist(pid))))
 
+const getProcessTreePids = async rootPid => {
+  if (process.platform !== 'win32') return [rootPid, ...(await pidtree(rootPid))]
+
+  const processList = await psList()
+  const pids = new Set([rootPid])
+  const queue = [rootPid]
+
+  while (queue.length) {
+    const currentPid = queue.shift()
+    for (const processInfo of processList) {
+      if (processInfo.ppid === currentPid && !pids.has(processInfo.pid)) {
+        pids.add(processInfo.pid)
+        queue.push(processInfo.pid)
+      }
+    }
+  }
+
+  return [...pids]
+}
+
 test('kill a process with no childs', async t => {
   const subprocess = $(`node ${scripts.child}`, { stdio: 'inherit' })
   subprocess.catch(() => {})
+  t.teardown(async () => {
+    try {
+      await killProcessGroup(subprocess)
+    } catch (_) {}
+  })
   await setTimeout(100)
   t.truthy(await processExist(subprocess.pid))
   await killProcessGroup(subprocess)
@@ -51,6 +76,11 @@ test('kill a detached process with no childs', async t => {
     stdio: 'inherit'
   })
   subprocess.catch(() => {})
+  t.teardown(async () => {
+    try {
+      await killProcessGroup(subprocess)
+    } catch (_) {}
+  })
   await setTimeout(100)
   t.truthy(await processExist(subprocess.pid))
   await killProcessGroup(subprocess)
@@ -64,8 +94,13 @@ test('kill a detached process with childs', async t => {
     stdio: 'inherit'
   })
   subprocess.catch(() => {})
+  t.teardown(async () => {
+    try {
+      await killProcessGroup(subprocess)
+    } catch (_) {}
+  })
   await setTimeout(100)
-  const pids = [subprocess.pid, ...(await pidtree(subprocess.pid))]
+  const pids = await getProcessTreePids(subprocess.pid)
   t.truthy(await pEvery(pids, processExist))
   await killProcessGroup(subprocess)
   t.true(await waitForProcessesExit(pids))
