@@ -20,13 +20,29 @@ const getProcess = async _pid =>
 
 const processExist = async pid => !!(await getProcess(pid))
 
+const waitFor = async (predicate, { timeout = 5000, interval = 100 } = {}) => {
+  const startedAt = Date.now()
+  while (Date.now() - startedAt < timeout) {
+    if (await predicate()) return true
+    await setTimeout(interval)
+  }
+  return predicate()
+}
+
+const waitForProcessExit = pid =>
+  waitFor(async () => !(await processExist(pid)))
+
+const waitForProcessesExit = pids =>
+  waitFor(async () => pEvery(pids, async pid => !(await processExist(pid))))
+
 test('kill a process with no childs', async t => {
   const subprocess = $(`node ${scripts.child}`, { stdio: 'inherit' })
   subprocess.catch(() => {})
   await setTimeout(100)
   t.truthy(await processExist(subprocess.pid))
   await killProcessGroup(subprocess)
-  t.falsy(await processExist(subprocess.id))
+  t.true(await waitForProcessExit(subprocess.pid))
+  t.falsy(await processExist(subprocess.pid))
 })
 
 test('kill a detached process with no childs', async t => {
@@ -38,7 +54,8 @@ test('kill a detached process with no childs', async t => {
   await setTimeout(100)
   t.truthy(await processExist(subprocess.pid))
   await killProcessGroup(subprocess)
-  t.falsy(await processExist(subprocess.id))
+  t.true(await waitForProcessExit(subprocess.pid))
+  t.falsy(await processExist(subprocess.pid))
 })
 
 test('kill a detached process with childs', async t => {
@@ -48,8 +65,9 @@ test('kill a detached process with childs', async t => {
   })
   subprocess.catch(() => {})
   await setTimeout(100)
-  const pids = await pidtree(subprocess.pid)
+  const pids = [subprocess.pid, ...(await pidtree(subprocess.pid))]
   t.truthy(await pEvery(pids, processExist))
   await killProcessGroup(subprocess)
-  t.falsy(await pEvery(pids, processExist))
+  t.true(await waitForProcessesExit(pids))
+  t.true(await pEvery(pids, async pid => !(await processExist(pid))))
 })
