@@ -1,8 +1,8 @@
 # kill-process-group
 
-![Last version](https://img.shields.io/github/tag/Kikobeats/kill-process-group.svg?style=flat-square)
-[![Coverage Status](https://img.shields.io/coveralls/Kikobeats/kill-process-group.svg?style=flat-square)](https://coveralls.io/github/Kikobeats/kill-process-group)
-[![NPM Status](https://img.shields.io/npm/dm/kill-process-group.svg?style=flat-square)](https://www.npmjs.org/package/kill-process-group)
+[![Last version](https://img.shields.io/github/v/tag/Kikobeats/kill-process-group?style=flat-square)](https://github.com/Kikobeats/kill-process-group/releases)
+[![Coverage Status](https://img.shields.io/coverallsCoverage/github/Kikobeats/kill-process-group?style=flat-square)](https://coveralls.io/github/Kikobeats/kill-process-group)
+[![NPM Status](https://img.shields.io/npm/dm/kill-process-group?style=flat-square)](https://www.npmjs.com/package/kill-process-group)
 
 > It kills a process group. No dependencies. Windows support.
 

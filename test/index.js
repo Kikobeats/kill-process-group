@@ -7,7 +7,7 @@ const pEvery = require('p-every')
 const psList = require('ps-list')
 const $ = require('tinyspawn')
 const path = require('path')
-const test = require('ava')
+const test = require('ava').default
 
 const scripts = {
   parent: path.join(__dirname, 'helpers', 'parent.js'),
